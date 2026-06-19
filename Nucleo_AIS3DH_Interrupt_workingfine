@@ -51,6 +51,8 @@
 #define INT1_THS_LSB_MG      16U
 #define INT1_THS_VALUE       ((MOTION_THRESHOLD_MG + INT1_THS_LSB_MG - 1U) / INT1_THS_LSB_MG)
 #define MOTION_DELTA_COUNTS  10
+
+#define LIS3DH_ODR           0x17  // 0x17=1Hz, 0x27=10Hz, 0x37=25Hz, 0x47=50Hz, 0x57=100Hz, 0x67=200Hz, 0x77=400Hz
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -420,7 +422,7 @@ uint8_t LIS3DH_Init(void)
   if (id != 0x33)
     return 0;
 
-  LIS3DH_WriteReg(CTRL_REG1, 0x57);                       // 100Hz, all axes enabled
+  LIS3DH_WriteReg(CTRL_REG1, LIS3DH_ODR | 0x07);         // ODR + all axes enabled
   LIS3DH_WriteReg(CTRL_REG2, 0x01);                       // High-pass filter to INT1 generator
   LIS3DH_WriteReg(CTRL_REG4, 0x88);                       // BDU + high-resolution, +-2g
   LIS3DH_WriteReg(INT1_THS, (uint8_t)INT1_THS_VALUE);     // Closest hardware threshold to 10mg
